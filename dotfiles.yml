@@ -1,0 +1,8 @@
+# Setting up main work projects
+- name: Set up work projects
+  hosts:
+    - creamsoda
+  roles:
+    - role: repositories
+      tags:
+        - repositories

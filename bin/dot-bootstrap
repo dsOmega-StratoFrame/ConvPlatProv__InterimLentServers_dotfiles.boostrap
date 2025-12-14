@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -e
+
+if ! [ -x "$(command -v ansible)" ]; then
+    echo "Ansible is not installed.";
+    if [ -x "$(command -v brew)" ]; then
+        echo "Installing it via brew...";
+        brew install ansible
+    elif [ -x "$(command -v apt)" ]; then
+        echo "Installing it via apt...";
+        sudo apt install ansible -v 2.7.4
+    elif [ -x "$(command -v yay)" ]; then
+        echo "Installing it via yay...";
+        sudo yay ansible
+    elif [ -x "$(command -v pacman)" ]; then
+        echo "Installing it via pacman...";
+        sudo pacman -S ansible
+    else
+        echo "Error: couldn't find package manager to install ansible!";
+        exit 1
+    fi
+fi
+
+tags="$1"
+
+if [ -z "$tags" ]; then
+    echo "Do you wish to install all tags? It will override current configurations."
+    select yn in "Yes" "No, choose tags" "Cancel"; do
+        case $yn in
+            Yes ) tags="all"; break;;
+            "No, choose tags" ) read -p "Enter tags: " tags; break;;
+            Cancel ) exit;;
+        esac
+    done
+fi
+
+ansible-playbook ./dotfiles.yml --tags "$tags" -v
+
+if command -v terminal-notifier 1>/dev/null 2>&1; then
+    terminal-notifier -title "dotfiles: Bootstrap complete" -message "Successfully set up dev environment."
+fi

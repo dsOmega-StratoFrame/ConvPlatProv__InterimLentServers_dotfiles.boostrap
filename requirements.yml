@@ -1,0 +1,8 @@
+---
+roles:
+  - src: https://github.com/danielrolls/nix-install
+  - name: ansible-kit-taskserver2
+    src: https://github.com/ansible-kit/taskserver2
+
+collections:
+  - name: vladgh.samba
