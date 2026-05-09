@@ -1,0 +1,18 @@
+---
+- name: Deploy VLESS via NixOS on MelisStoke
+  hosts: melisstoke
+  roles:
+    - role: bootstrap_prereqs
+      tags: bootstrap_prereqs
+
+    - role: bootstrap_ssh
+      tags: bootstrap_ssh
+
+    - role: bootstrap_clone
+      tags: bootstrap_clone
+
+    - role: bootstrap_run
+      tags: bootstrap_run
+
+    - role: bootstrap_links
+      tags: bootstrap_links

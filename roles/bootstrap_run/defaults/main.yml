@@ -1,0 +1,6 @@
+---
+bootstrap_server_ip: ""
+bootstrap_ssh_private_key_file: "~/.ssh/id_rsa"
+bootstrap_clients_count: 2
+bootstrap_reality_domain: "www.microsoft.com"
+bootstrap_enable_nodeexporter: false

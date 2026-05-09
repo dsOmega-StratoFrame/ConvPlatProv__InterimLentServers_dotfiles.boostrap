@@ -1,0 +1,4 @@
+---
+bootstrap_server_ip: ""
+bootstrap_vps_root_password: ""
+bootstrap_ssh_private_key_file: "~/.ssh/id_rsa"

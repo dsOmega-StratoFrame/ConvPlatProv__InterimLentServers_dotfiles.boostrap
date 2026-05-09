@@ -1,58 +1,49 @@
-# My dotfiles
+<!-- mtoc-start -->
 
-Configure workstations using Ansible. Has support for all major platforms
-including Linux and Windows. Also can initialize Wsl (with NixOs on it).
+* [InterimLentServers%Foreign_dotfiles.bootstrap](#interimlentserversforeign_dotfilesbootstrap)
+  * [VLESS/NixOS Deployment](#vlessnixos-deployment)
+  * [Usage](#usage)
+  * [Variables](#variables)
 
-## Get started
-Use `./bin/dot-bootstrap` (should be executable) to install required packages for
-ansible. Once installed press cancel ('3') because you're most likely will need
-some extra variables set in the vault.
+<!-- mtoc-end -->
+# InterimLentServers%Foreign_dotfiles.bootstrap
 
-To configure variables for current host (most importantly password) go to `group_vars`
-and create a new host with variables. Passwords here are only referencing encrypted vault.
-To edit vault you have to find a master password inn keepass and populate `.vault_pass.py` in the root of the repo.
-See `.vault_pass.py.example` for example. You will most likely need to make `.vault_pass.py` executable.
+Ansible role to configure external VPS servers.
 
-After that you will be ready to edit vault:
-```sh
-ansible-vault edit --vault-password-file .vault_pass.py ./group_vars/<host_name>/vault
-```
+## VLESS/NixOS Deployment
 
-After that you're ready to go!
+Deploys VLESS (Xray) on a VPS using NixOS via nixos-anywhere.
 
-## Common pitfalls
-### Hosts
-Note that when you're running playbook, it will try to deploy it to all the hosts in `hosts.ini` file.
-Limit it to the only hosts you need.
+## Usage
 
-### Ansible.cfg in world writable directory
-When running from shared directory in multisystem setup (Windows + WSL included) you will get errors and `ansible.cfg`
-will be ignored (and hosts too). To fix it, the easiest way is to pass it directly as a variable when running scipt:
-```sh
-ANSIBLE_CONFIG=ansible.cfg ./bin/dot-bootstrap
-```
+1. Edit `hosts.ini` to add MelisStoke with its IP:
+   ```
+   [melisstoke]
+   MelisStoke ansible_host=<VPS_IP>
+   ```
 
-## Bootstrap
+2. Populate vault:
+   ```sh
+   ansible-vault edit group_vars/melisstoke/vault
+   ```
+   Required variables:
+   - `vault_bootstrap_server_ip` - VPS public IP
+   - `vault_bootstrap_vps_root_password` - Initial root password
 
-Firt setup installation run the dot-bootstrap command.
+3. Run:
+   ```sh
+   ansible-playbook deploy_vless.yml -e bootstrap_server_ip=X -e bootstrap_vps_root_password=Y
+   ```
 
-```
-$ ./bin/dot-bootstrap
-```
+## Variables
 
-After that you can run any scripts defined in the `$DOTFILES_PATH/bin`
+| Variable | Default | Description |
+|---|---|---|
+| `bootstrap_server_ip` | `""` | VPS public IP (required) |
+| `bootstrap_vps_root_password` | `""` | Initial root SSH password (required) |
+| `bootstrap_ssh_private_key_file` | `"~/.ssh/id_rsa"` | SSH private key path |
+| `bootstrap_disk_device` | `"/dev/sda"` | Target disk device |
+| `bootstrap_clients_count` | `2` | Number of VLESS client configs |
+| `bootstrap_reality_domain` | `"www.microsoft.com"` | REALITY masking domain |
+| `bootstrap_enable_nodeexporter` | `false` | Enable Prometheus node exporter |
 
-```
-$ dot-bootstrap
-```
-
-## Structure
-When the program is used in combination with another role, create a new task in
-the same folder nearby and import it. For example, `terminal-icons` is installed
-alongside `powershell`. If it is used with multiple roles, then use tags:
-`oh_my_posh` can be used in many terminals, therefore it is placed in
-a separate role and has the same tag as `powershell` role - `powershell`. So
-when you try to install any compatible shell, it will be installed alongside.
-
-If the role is a direct dependency of another roles, then use meta
-`dependencies`.

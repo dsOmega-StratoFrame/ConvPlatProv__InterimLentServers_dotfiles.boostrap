@@ -1,0 +1,20 @@
+base_dir: "~/Projects"
+professional_repositories:
+  - name: 'auto-hub'
+    suite_name: 'AutoHub'
+    url: 'frontend/autohub.git'
+    worktrees:
+      - name: "Master"
+        symlink:
+          src: "AutoHub.git"
+          dest: "Master"
+      - name: "Main" 
+        symlink:
+          src: "AutoHub.git"
+          dest: "Main"
+      - name: "CurrentTask"
+        branch: "_CurrentTask"
+      - name: "CurrentTask1"
+        branch: "_CurrentTask1"
+      - name: "Review"
+        branch: "_Review"

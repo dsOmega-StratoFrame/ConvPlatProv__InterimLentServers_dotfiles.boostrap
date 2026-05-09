@@ -1,0 +1,27 @@
+---
+- name: Create temporary working directory
+  delegate_to: localhost
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: nixos-xray
+  register: workdir
+
+- name: Clone repository
+  delegate_to: localhost
+  ansible.builtin.git:
+    repo: "{{ bootstrap_repo_url }}"
+    dest: "{{ workdir.path }}"
+    version: "{{ bootstrap_repo_version }}"
+
+- name: Update disk device in diskio.nix
+  delegate_to: localhost
+  ansible.builtin.replace:
+    path: "{{ workdir.path }}/diskio.nix"
+    regexp: 'device = "/dev/sda"'
+    replace: 'device = "{{ bootstrap_disk_device }}"'
+  when: bootstrap_disk_device != "/dev/sda"
+
+- name: Store working directory path
+  delegate_to: localhost
+  ansible.builtin.set_fact:
+    bootstrap_workdir: "{{ workdir.path }}"

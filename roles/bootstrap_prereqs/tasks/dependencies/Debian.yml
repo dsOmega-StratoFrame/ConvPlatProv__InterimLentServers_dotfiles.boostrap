@@ -1,0 +1,15 @@
+---
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install prerequisites
+  ansible.builtin.apt:
+    name: "{{ bootstrap_prerequisites }}"
+    state: present
+
+- name: Start and enable Docker service
+  ansible.builtin.systemd:
+    name: docker
+    state: started
+    enabled: yes

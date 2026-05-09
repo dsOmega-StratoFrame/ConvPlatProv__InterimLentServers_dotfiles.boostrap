@@ -142,3 +142,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Ansible
+*.retry
+vless_client_links_*.txt
+/tmp/

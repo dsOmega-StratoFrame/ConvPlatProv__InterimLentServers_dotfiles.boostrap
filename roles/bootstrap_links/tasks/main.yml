@@ -1,0 +1,22 @@
+---
+- name: Show VLESS client links
+  delegate_to: localhost
+  ansible.builtin.debug:
+    msg: |
+      {% for line in bootstrap_output.split('\n') %}
+      {% if 'vless://' in line %}
+      {{ line }}
+      {% endif %}
+      {% endfor %}
+
+- name: Save links to file
+  delegate_to: localhost
+  ansible.builtin.copy:
+    content: |
+      {% for line in bootstrap_output.split('\n') %}
+      {% if 'vless://' in line %}
+      {{ line }}
+      {% endif %}
+      {% endfor %}
+    dest: "~/vless_client_links_{{ bootstrap_server_ip }}.txt"
+  become: no

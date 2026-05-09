@@ -1,0 +1,22 @@
+---
+- name: Upload SSH public key to VPS
+  delegate_to: "{{ bootstrap_server_ip }}"
+  ansible.builtin.authorized_key:
+    user: root
+    state: present
+    key: "{{ lookup('file', bootstrap_ssh_private_key_file + '.pub') }}"
+  vars:
+    ansible_user: root
+    ansible_ssh_pass: "{{ bootstrap_vps_root_password }}"
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+  register: key_upload
+
+- name: Verify passwordless SSH access
+  delegate_to: localhost
+  ansible.builtin.command:
+    cmd: "ssh -i {{ bootstrap_ssh_private_key_file }} -o BatchMode=yes -o StrictHostKeyChecking=no root@{{ bootstrap_server_ip }} 'echo OK'"
+  register: ssh_test
+  changed_when: false
+  retries: 3
+  delay: 5
+  until: ssh_test.rc == 0

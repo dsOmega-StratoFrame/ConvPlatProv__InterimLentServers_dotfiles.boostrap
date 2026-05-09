@@ -1,0 +1,23 @@
+---
+- name: Execute bootstrap script
+  delegate_to: localhost
+  ansible.builtin.shell:
+    chdir: "{{ bootstrap_workdir }}"
+    cmd: |
+      set -o pipefail
+      ./bootstrap.sh \
+        --server-ip {{ bootstrap_server_ip }} \
+        --auth-keys {{ bootstrap_ssh_private_key_file }}.pub \
+        --root-auth-keys {{ bootstrap_ssh_private_key_file }}.pub \
+        --priv-key {{ bootstrap_ssh_private_key_file }} \
+        --clients {{ bootstrap_clients_count }} \
+        --domain {{ bootstrap_reality_domain }} \
+        {% if bootstrap_enable_nodeexporter %}--enable-nodeexporter true{% else %}--enable-nodeexporter false{% endif %} \
+        2>&1 | tee /tmp/bootstrap_output.txt
+  register: bootstrap_out
+  changed_when: true
+
+- name: Store bootstrap output
+  delegate_to: localhost
+  ansible.builtin.set_fact:
+    bootstrap_output: "{{ lookup('file', '/tmp/bootstrap_output.txt') }}"

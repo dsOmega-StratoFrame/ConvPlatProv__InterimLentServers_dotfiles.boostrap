@@ -1,0 +1,4 @@
+---
+bootstrap_ssh_private_key_file: "~/.ssh/id_rsa"
+bootstrap_repo_url: "https://github.com/nnagibator228/nixos-anywhere-xray.git"
+bootstrap_repo_version: "main"
