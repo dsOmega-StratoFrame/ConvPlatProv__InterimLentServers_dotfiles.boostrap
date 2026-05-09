@@ -3,7 +3,7 @@
   ansible.builtin.debug:
     msg: Configuring {{ inventory_hostname }}
 
-- name: Upload SSH public key to VPS
+- name: Upload SSH public key to VPS using password
   delegate_to: "{{ inventory_hostname }}"
   ansible.builtin.authorized_key:
     user: root
@@ -15,12 +15,12 @@
     ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
   register: key_upload
 
-# - name: Verify passwordless SSH access
-#   delegate_to: localhost
-#   ansible.builtin.command:
-#     cmd: "ssh -i {{ bootstrap_ssh_private_key_file }} -o BatchMode=yes -o StrictHostKeyChecking=no root@{{ inventory_hostname }} 'echo OK'"
-#   register: ssh_test
-#   changed_when: false
-#   retries: 3
-#   delay: 5
-#   until: ssh_test.rc == 0
+- name: Verify SSH access via key
+  delegate_to: localhost
+  ansible.builtin.command:
+    cmd: "ssh -i {{ bootstrap_ssh_private_key_file }} -o BatchMode=yes -o StrictHostKeyChecking=no root@{{ inventory_hostname }} 'echo OK'"
+  register: ssh_test
+  changed_when: false
+  retries: 3
+  delay: 5
+  until: ssh_test.rc == 0
