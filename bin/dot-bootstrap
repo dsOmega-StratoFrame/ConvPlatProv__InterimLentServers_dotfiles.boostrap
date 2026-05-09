@@ -34,8 +34,8 @@ if [ -z "$tags" ]; then
     done
 fi
 
-ansible-playbook ./dotfiles.yml --tags "$tags" -v
+ansible-playbook ./deploy_vless.yml --tags "$tags" -vvv
 
 if command -v terminal-notifier 1>/dev/null 2>&1; then
-    terminal-notifier -title "dotfiles: Bootstrap complete" -message "Successfully set up dev environment."
+    terminal-notifier -title "deploy-vless: Bootstrap complete" -message "Successfully set up dev environment."
 fi

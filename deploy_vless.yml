@@ -1,18 +1,20 @@
 ---
 - name: Deploy VLESS via NixOS on MelisStoke
-  hosts: melisstoke
+  hosts: vless_hosts
   roles:
-    - role: bootstrap_prereqs
-      tags: bootstrap_prereqs
+    # TODO: Not needed? Or just verify + change ssh key generation to use
+    # invoke.
+    # - role: bootstrap_prereqs
+    #   tags: vless
 
     - role: bootstrap_ssh
-      tags: bootstrap_ssh
+      tags: vless
 
-    - role: bootstrap_clone
-      tags: bootstrap_clone
+    # - role: bootstrap_clone
+    #   tags: vless
 
-    - role: bootstrap_run
-      tags: bootstrap_run
+    # - role: bootstrap_run
+    #   tags: vless
 
-    - role: bootstrap_links
-      tags: bootstrap_links
+    # - role: bootstrap_links
+    #   tags: vless

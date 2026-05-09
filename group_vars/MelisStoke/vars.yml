@@ -1,0 +1,6 @@
+---
+bootstrap_vps_root_password: "{{ vault_bootstrap_vps_root_password }}"
+bootstrap_ssh_private_key_file: "~/.ssh/Lent__MelisStoke"
+# ansible_connection: ssh
+ansible_user: root
+ansible_password: "{{ vault_bootstrap_vps_root_password }}"
