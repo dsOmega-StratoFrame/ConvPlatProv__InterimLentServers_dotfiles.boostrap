@@ -1,4 +1,14 @@
 ---
+# If the ip address is provided, it will still return first entry - ip address.
+- name: Get ip address corresponding to the hostname we're deploying to
+  delegate_to: localhost
+  ansible.builtin.getent:
+    database: hosts
+    key: "{{ inventory_hostname }}"
+    fail_key: true
+- ansible.builtin.debug:
+    msg: "Found addresses to deploy based on provided inventory hostname: {{ ansible_facts.getent_hosts.keys() | first }}. It will be used in VLESS config"
+
 - name: Execute bootstrap script
   delegate_to: localhost
   ansible.builtin.shell:
@@ -6,7 +16,7 @@
     cmd: |
       set -o pipefail
       ./bootstrap.sh \
-        --server-ip {{ bootstrap_server_ip }} \
+        --server-ip {{ ansible_facts.getent_hosts.keys() | first }} \
         --auth-keys {{ bootstrap_ssh_private_key_file }}.pub \
         --root-auth-keys {{ bootstrap_ssh_private_key_file }}.pub \
         --priv-key {{ bootstrap_ssh_private_key_file }} \
