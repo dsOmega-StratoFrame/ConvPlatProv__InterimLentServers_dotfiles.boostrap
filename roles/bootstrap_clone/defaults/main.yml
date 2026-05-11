@@ -1,4 +1,4 @@
 ---
-bootstrap_disk_device: "/dev/sda"
+bootstrap_disk_device: ""
 bootstrap_repo_url: "https://github.com/nnagibator228/nixos-anywhere-xray.git"
-bootstrap_repo_version: "main"
+bootstrap_repo_version: "e896926f18c988e11610f9a6760b598ff47b60ae" # https://github.com/nnagibator228/nixos-anywhere-xray/commit/e896926f18c988e11610f9a6760b598ff47b60ae

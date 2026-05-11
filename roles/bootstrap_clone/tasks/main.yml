@@ -1,4 +1,9 @@
 ---
+- name: Validate bootstrap_disk_device is set
+  ansible.builtin.fail:
+    msg: "Run lsblk command to check devices on remote and then please specify `bootstrap_disk_device` (e.g., /dev/sda) in group_vars or as extra variable."
+  when: not bootstrap_disk_device or bootstrap_disk_device | length == 0
+
 - name: Create temporary working directory
   delegate_to: localhost
   ansible.builtin.tempfile:
