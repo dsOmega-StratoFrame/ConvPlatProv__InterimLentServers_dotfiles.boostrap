@@ -1,0 +1,3 @@
+[submodule "RealiTLScanner"]
+	path = bin/RealiTLScanner
+	url = git@github.com:XTLS/RealiTLScanner.git
