@@ -1,10 +1,12 @@
 ---
 bootstrap_vps_root_password: "{{ vault_bootstrap_vps_root_password }}"
-bootstrap_ssh_private_key_file: "~/.ssh/Lent__MelisStoke"
+bootstrap_ssh_private_key_file: "~/.ssh/Lent__MelisStoke_bootstrap"
 ansible_connection: ssh
 ansible_user: root
 ansible_password: "{{ vault_bootstrap_vps_root_password }}"
 # Will be used for all remote tasks except the one that authorizes key on
 # remote.
 ansible_ssh_private_key_file: "{{ bootstrap_ssh_private_key_file }}"
-bootstrap_disk_device: "/dev/vda2"
+bootstrap_disk_device: "/dev/vda"
+bootstrap_reality_domain: "github.com"
+bootstrap_server_mask_length: 24

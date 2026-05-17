@@ -1,6 +1,10 @@
 ---
-bootstrap_server_ip: ""
+bootstrap_gateway: ""
 bootstrap_ssh_private_key_file: "~/.ssh/id_rsa"
-bootstrap_clients_count: 2
+bootstrap_clients_count: 5
 bootstrap_reality_domain: "www.microsoft.com"
 bootstrap_enable_nodeexporter: false
+bootstrap_server_mask_length: 24
+# These are derived from getent hosts file.
+bootstrap_server_ip: ""
+bootstrap_server_gateway_ip: ""

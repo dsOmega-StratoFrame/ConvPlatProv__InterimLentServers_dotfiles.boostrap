@@ -23,5 +23,8 @@ install requirements.yml:
 facts:
 	ANSIBLE_CONFIG=ansible.cfg ansible localhost -m ansible.builtin.setup
 
+test:
+	ANSIBLE_CONFIG=ansible.cfg ansible-playbook ./test.yml -v
+
 config:
 	ansible-config dump

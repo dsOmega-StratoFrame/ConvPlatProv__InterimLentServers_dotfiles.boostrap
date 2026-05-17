@@ -6,8 +6,26 @@
     database: hosts
     key: "{{ inventory_hostname }}"
     fail_key: true
-- ansible.builtin.debug:
-    msg: "Found addresses to deploy based on provided inventory hostname: {{ ansible_facts.getent_hosts.keys() | first }}. It will be used in VLESS config"
+
+- name: Derive server ip
+  delegate_to: localhost
+  ansible.builtin.set_fact:
+    bootstrap_server_ip: "{{ ansible_facts.getent_hosts.keys() | first }}"
+
+- name: Debug address
+  ansible.builtin.debug:
+    msg: "Found address to deploy based on provided inventory hostname: {{ bootstrap_server_ip }}. It will be used in VLESS config"
+
+- name: Derive server inner gateway ip
+  delegate_to: localhost
+  ansible.builtin.set_fact:
+    # We're dividing our address space into many subnets inside bootstrap_server_mask_length subnet (gateway subnet).
+    # Each subnet has mask with length 32 so basically each has only one ip. We get second subnet (index = 1), in other words getting second ip - gateway ip.
+    bootstrap_server_gateway_ip: '{{ (bootstrap_server_ip + "/" + (bootstrap_server_mask_length | string)) | ansible.utils.ipsubnet(32, 1) }}'
+
+- name: Debug gateway
+  ansible.builtin.debug:
+    msg: "Derived gateway address to configure based on provided inventory hostname: {{ bootstrap_server_gateway_ip }}. It will be used in VLESS config"
 
 - name: Execute bootstrap script
   delegate_to: localhost
@@ -16,7 +34,8 @@
     cmd: |
       set -o pipefail
       ./bootstrap.sh \
-        --server-ip {{ ansible_facts.getent_hosts.keys() | first }} \
+        --server-ip {{ bootstrap_server_ip }} \
+        --gateway {{ bootstrap_server_gateway_ip }} \
         --auth-keys {{ bootstrap_ssh_private_key_file }}.pub \
         --root-auth-keys {{ bootstrap_ssh_private_key_file }}.pub \
         --priv-key {{ bootstrap_ssh_private_key_file }} \
